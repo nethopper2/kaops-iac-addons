@@ -1,0 +1,37 @@
+metadata:
+  slug: aws-eks
+  name: AWS EKS
+  description: Start, run, and scale Kubernetes applications in the AWS cloud and on-premises data centers.
+  categories: ['Infrastructure']
+  logoUrlDark: https://nh-addons.s3.us-east-1.amazonaws.com/aws-eks/logo-dark.png
+  logoUrlLight: https://nh-addons.s3.us-east-1.amazonaws.com/aws-eks/logo-light.png
+  detailUrl: https://addons.kaops.net/aws-eks/
+  externalUrl: https://aws.amazon.com/pm/eks/
+  isProduction: false
+  installTargets:
+    hub: true
+    hubRequired: true
+    edge: false
+
+forms: 
+  - slug: default
+    label: AWS EKS configuration
+    description: Start, run, and scale Kubernetes applications in the AWS cloud and on-premises data centers.
+variables:
+  - slug: 'providerConfigRef'
+    name: 'providerConfigRef'
+    path: 'providerConfigRef'
+    forms: ['default']
+    ui:
+      type: 'text'
+      placeholder: 'awsconfig'
+      validation: 'required'
+  - slug: 'cluster_name'
+    name: 'cluster_name'
+    path: 'cluster_name'
+    forms: ['default']
+    ui:
+      type: 'text'
+      label: 'EKS Cluster Name'
+      validation: 'required'
+system:
