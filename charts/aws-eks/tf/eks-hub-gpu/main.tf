@@ -1,19 +1,35 @@
 provider "aws" {
   region = var.region
+  shared_credentials_files = ["aws-creds.ini"]
 }
+
+
+data "aws_eks_cluster_auth" "cluster" {
+  name = var.cluster_name
+}
+
+data "aws_caller_identity" "current" {}
 
 provider "kubernetes" {
   host                   = module.eks.cluster_endpoint
-  token                  = data.aws_eks_cluster_auth.cluster.token
   cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
 }
 
 provider "helm" {
+  repository_cache       = "/tmp/.helm"
   kubernetes {
     host                   = module.eks.cluster_endpoint
-    token                  = data.aws_eks_cluster_auth.cluster.token
     cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+    token                  = data.aws_eks_cluster_auth.cluster.token
   }
+}
+
+provider "kubectl" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+  token                  = data.aws_eks_cluster_auth.cluster.token
+  load_config_file       = false
 }
 
 data "aws_availability_zones" "available" {}
@@ -116,7 +132,7 @@ module "eks_managed_node_group_gpu" {
 
 module "eks_blueprints_addons" {
   source  = "aws-ia/eks-blueprints-addons/aws"
-  version = "~> 1.14"
+  version = "~> 1.16"
 
   cluster_name      = module.eks.cluster_name
   cluster_endpoint  = module.eks.cluster_endpoint
@@ -126,6 +142,9 @@ module "eks_blueprints_addons" {
   create_delay_dependencies = [module.eks_managed_node_group_default.node_group_arn]
 
   eks_addons = {
+    aws-ebs-csi-driver = {
+      service_account_role_arn = module.ebs_csi_driver_irsa.iam_role_arn
+    }
     coredns    = {}
     kube-proxy = {}
   }
@@ -183,6 +202,7 @@ resource "kubernetes_storage_class_v1" "gp3" {
   ]
 }
 
+
 ################################################################################
 # Supporting Resources
 ################################################################################
@@ -209,6 +229,26 @@ module "vpc" {
     "kubernetes.io/role/internal-elb" = 1
   }
 }
+
+module "ebs_kms_key" {
+  source  = "terraform-aws-modules/kms/aws"
+  version = "~> 1.5"
+
+  description = "Customer managed key to encrypt EKS managed node group volumes"
+
+  # Policy
+  key_administrators = [data.aws_caller_identity.current.arn]
+  key_service_roles_for_autoscaling = [
+    # required for the ASG to manage encrypted volumes for nodes
+    "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling",
+    # required for the cluster / persistentvolume-controller to create encrypted PVCs
+    module.eks.cluster_iam_role_arn,
+  ]
+
+  # Aliases
+  aliases = ["eks/${var.cluster_name}/ebs"]
+}
+
 module "ebs_csi_driver_irsa" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "~> 5.20"
@@ -225,28 +265,11 @@ module "ebs_csi_driver_irsa" {
   }
 }
 
-resource "helm_release" "ebs_csi_driver" {
-  name       = "aws-ebs-csi-driver"
-  namespace  = "kube-system"
-  repository = "https://kubernetes-sigs.github.io/aws-ebs-csi-driver"
-  chart      = "aws-ebs-csi-driver"
-
-  set {
-    name  = "controller.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-    type  = "string"
-    value = module.ebs_csi_driver_irsa.iam_role_arn
-  }
-  set {
-    name  = "controller.sdkDebugLog"
-    type  = "auto"
-    value = true
-  }
-}
-
-resource "helm_release" "nvidia-device-plugin" {
-  name             = "nvidia-device-plugin"
-  namespace        = "nvidia-device-plugin"
-  repository       = "https://nvidia.github.io/k8s-device-plugin"
-  chart            = "nvidia-device-plugin"
-  create_namespace = true
-}
+# resource "helm_release" "nvidia_device_plugin" {
+#   name             = "nvidia-device-plugin"
+#   namespace        = "nvidia-device-plugin"
+#   repository       = "https://nvidia.github.io/k8s-device-plugin"
+#   chart            = "nvidia-device-plugin"
+#   version          = "0.17.1"
+#   create_namespace = true
+# }
