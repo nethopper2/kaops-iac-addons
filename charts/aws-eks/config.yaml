@@ -25,8 +25,8 @@ variables:
       type: 'text'
       label: 'Provider Config Name'
       validation: 'required'
-  - slug: 'cluster_name'
-    path: 'tf.cluster_name'
+  - slug: 'clusterName'
+    path: 'tf.clusterName'
     forms: ['default']
     ui:
       type: 'text'
@@ -38,26 +38,26 @@ variables:
     ui:
       type: 'text'
       label: 'AWS Region'
-  - slug: 'instance_type_default'
-    path: 'tf.instance_type_default'
+  - slug: 'instanceTypeDefault'
+    path: 'tf.instanceTypeDefault'
     forms: ['default']
     ui:
       type: 'text'
       label: 'AWS Instance Type for a default node group'
-  - slug: 'instance_type_gpu'
-    path: 'tf.instance_type_gpu'
+  - slug: 'instanceTypeGpu'
+    path: 'tf.instanceTypeGpu'
     forms: ['default']
     ui:
       type: 'text'
       label: 'AWS Instance Type for a GPU node group'
-  - slug: 'ami_type'
-    path: 'tf.ami_type'
+  - slug: 'amiType'
+    path: 'tf.amiType'
     forms: ['default']
     ui:
       type: 'text'
       label: 'AMI Type for a GPU node group'
-  - slug: 'vpc_cidr'
-    path: 'tf.vpc_cidr'
+  - slug: 'vpcCidr'
+    path: 'tf.vpcCidr'
     forms: ['default']
     ui:
       type: 'text'

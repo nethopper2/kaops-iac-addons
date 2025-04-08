@@ -15,17 +15,17 @@ spec:
       - key: region
         value: {{.Values.tf.region}}
       - key: cluster_name
-        value: {{.Values.tf.cluster_name}}
+        value: {{.Values.tf.clusterName}}
       - key: k8s_version
         value: "1.31"
       - key: instance_type_default
-        value: {{.Values.tf.instance_type_default}}
+        value: {{.Values.tf.instanceTypeDefault}}
       - key: instance_type_gpu
-        value: {{.Values.tf.instance_type_gpu}}
+        value: {{.Values.tf.instanceTypeGpu}}
       - key: vpc_cidr
-        value: {{.Values.tf.vpc_cidr}}
+        value: {{.Values.tf.vpcCidr}}
       - key: ami_type
-        value: {{.Values.tf.ami_type}}
+        value: {{.Values.tf.amiType}}
   writeConnectionSecretToRef:
     namespace: default
     name: private-ai-eks-connection-ref

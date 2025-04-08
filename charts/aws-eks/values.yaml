@@ -2,9 +2,9 @@ workspaceName: eks-cluster-workspace
 providerConfigRef: # user input - provider config selector
 tf:
   region: us-east-1
-  cluster_name: # user input - cluster name
-  k8s_version: 1.31
-  instance_type_default: t3.medium
-  instance_type_gpu: g4dn.2xlarge
-  vpc_cidr: 10.0.0.0/16
-  ami_type: AL2_x86_64_GPU
+  clusterName: # user input - cluster name
+  k8sVersion: 1.31
+  instanceTypeDefault: t3.medium
+  instanceTypeGpu: g4dn.2xlarge
+  vpcCidr: 10.0.0.0/16
+  amiType: AL2_x86_64_GPU
