@@ -22,7 +22,7 @@ variables:
     path: 'providerConfigRef'
     forms: ['default']
     ui:
-      type: cloudProvider
+      type: 'cloudProvider'
       label: 'Provider Config Name'
       validation: 'required'
   - slug: 'clusterName'
