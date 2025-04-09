@@ -3,6 +3,16 @@ entries:
   aws-eks:
   - apiVersion: v2
     appVersion: 0.1.0
+    created: "2025-04-09T08:57:01.004681177Z"
+    description: A Helm chart for EKS cluster
+    digest: 1383828f81aa4453c3a2d26eeea656dbaad0266eb8689ec817555e939c80ccd3
+    name: aws-eks
+    type: application
+    urls:
+    - https://github.com/nethopper2/kaops-iac-addons/releases/download/aws-eks-0.1.3/aws-eks-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v2
+    appVersion: 0.1.0
     created: "2025-04-08T10:33:55.818352295Z"
     description: A Helm chart for EKS cluster
     digest: 66095d24c1ec84c196b2043632072cc7e30c213f79dc96739843d33d729e6d28
@@ -31,4 +41,4 @@ entries:
     urls:
     - https://github.com/nethopper2/kaops-iac-addons/releases/download/aws-eks-0.1.0/aws-eks-0.1.0.tgz
     version: 0.1.0
-generated: "2025-04-08T10:33:55.818364258Z"
+generated: "2025-04-09T08:57:01.004704661Z"
