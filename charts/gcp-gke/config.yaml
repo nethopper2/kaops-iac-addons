@@ -2,7 +2,7 @@ metadata:
   slug: gcp-gke
   name: Google Cloud GKE
   description: Deploy, manage, and scale containerized applications using Kubernetes on Google's infrastructure.
-  categories: ['Infrastructure']
+  categories: []
   logoUrlDark: https://nh-addons.s3.us-east-1.amazonaws.com/gcp-gke/logo.png
   logoUrlLight: https://nh-addons.s3.us-east-1.amazonaws.com/gcp-gke/logo.png
   detailUrl: https://addons.kaops.net/gcp-gke/
